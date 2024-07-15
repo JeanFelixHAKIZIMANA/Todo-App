@@ -6,7 +6,14 @@ import { TodoList } from './TodoList'
 export default function App () {
 
     
-    const [todos, setTodos] = useState([])
+    const [todos, setTodos] = useState(() => {
+      const localValue = localStorage.getItem("ITEMS")
+      if (localValue == null ) return []
+        
+      
+      return JSON.parse(localValue)
+      
+    })
 
     function addTodo(title) {
       setTodos(currentTodos => {
@@ -17,9 +24,9 @@ export default function App () {
       }) 
     }
 
-    // useEffect(() => {
-    //   localStorage.setItem("ITEMS", JSON.stringify(todos))
-    // }, [todos])
+    useEffect(() => {
+      localStorage.setItem("ITEMS", JSON.stringify(todos))
+    }, [todos])
 
     
 
@@ -42,8 +49,8 @@ export default function App () {
 
 
   return <>
-    <NewTodoForm addTodo={addTodo} />
-  <h1 className='header'>Todo Items</h1>
+    <NewTodoForm onSubmit={addTodo} />
+    <h1 className='header'>Todo Items</h1>
 
     <TodoList todos={todos} toggleTodo={toggleTodo} deleteTodo={deleteTodo}/>
   </>
